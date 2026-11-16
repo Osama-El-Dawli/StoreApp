@@ -1,8 +1,20 @@
-import { getProductsEndPoint } from '../../../api/apiConst';
+import {
+  getProductsByCategoryEndPoint,
+  getProductsEndPoint,
+} from '../../../api/apiConst';
 import { api } from '../../../api/apiService';
 import { Product, ProductResponse } from '../types/productType';
 
 export const getProducts = async (): Promise<Product[]> => {
   const response = await api.get<ProductResponse>(getProductsEndPoint);
+  return response.data.products;
+};
+
+export const getProductsByCategory = async (
+  category: string,
+): Promise<Product[]> => {
+  const response = await api.get<ProductResponse>(
+    `${getProductsByCategoryEndPoint}/${category}`,
+  );
   return response.data.products;
 };

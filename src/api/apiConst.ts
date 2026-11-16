@@ -1,4 +1,5 @@
 export const loginEndPoint = '/auth/login';
 export const getMeEndPoint = '/auth/me';
 export const getProductsEndPoint = '/products';
-export const getCategoriessEndPoint = '/products/categories';
+export const getProductsByCategoryEndPoint = '/products/category';
+export const getCategoriesEndPoint = '/products/categories';

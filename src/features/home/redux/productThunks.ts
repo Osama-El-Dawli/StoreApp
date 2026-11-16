@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Product } from '../types/productType';
-import { getProducts } from '../api/productsApi';
+import { getProducts, getProductsByCategory } from '../api/productsApi';
 import axios from 'axios';
 
 export const fetchProducts = createAsyncThunk<Product[]>(
@@ -18,3 +18,19 @@ export const fetchProducts = createAsyncThunk<Product[]>(
     }
   },
 );
+
+export const fetchProductsByCategory = createAsyncThunk<Product[], string>(
+  'getProductsByCategory',
+  async (category, {rejectWithValue}) => {
+    try {
+      return await getProductsByCategory(category);
+    } catch (error) {
+      if(axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to get products',
+        );
+      }
+      return rejectWithValue('Un expected error');
+    }
+  }
+)

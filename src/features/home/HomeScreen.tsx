@@ -1,14 +1,14 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import ProductList from './components/ProductList';
 import FilterList from './components/FilterList';
-import { AutoSkeletonView } from 'react-native-auto-skeleton';
 import { fetchCategories } from './redux/categoryThunks';
-import { fetchProducts } from './redux/productThunks';
+import { fetchProducts, fetchProductsByCategory } from './redux/productThunks';
 
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const {
     items: categories,
@@ -22,25 +22,43 @@ export default function HomeScreen() {
     isLoading: productLoading,
   } = useAppSelector(state => state.products);
 
-  const loadData = useCallback(() => {
+  useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(fetchProducts());
   }, [dispatch]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    const products =
+      selectedCategory === 'all'
+        ? dispatch(fetchProducts())
+        : dispatch(fetchProductsByCategory(selectedCategory));
+
+    return () => products.abort();
+  }, [selectedCategory, dispatch]);
 
   return (
     <View style={styles.container}>
+      {productError != null ? (
+        <Text style={{ color: 'red', alignSelf: 'center' }}>
+          {productError}
+        </Text>
+      ) : null}
       <ProductList
         isLoading={productLoading}
         products={products}
         ListHeaderComponent={
           <>
             <Text style={styles.categories}>Categories:</Text>
-            {categoriesError != null ? <Text>{categoriesError}</Text> : null}
-            <FilterList isLoading={categoriesLoading} categories={categories} />
+            {categoriesError != null ? (
+              <Text style={{ color: 'red', alignSelf: 'center' }}>
+                {categoriesError}
+              </Text>
+            ) : null}
+            <FilterList
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              isLoading={categoriesLoading}
+              categories={categories}
+            />
             <Text style={styles.products}>Products:</Text>
           </>
         }
