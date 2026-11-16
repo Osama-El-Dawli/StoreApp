@@ -1,6 +1,6 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { ProductState } from '../types/productType';
-import { fetchProducts, fetchProductsByCategory } from './productThunks';
+import { fetchProducts, fetchProductsByCategory, removeProduct } from './productThunks';
 
 const initialState: ProductState = {
   products: [],
@@ -14,6 +14,11 @@ const ProductSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(removeProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter(
+          p => String(p.id) !== String(action.payload),
+        );
+      })
       .addMatcher(
         isAnyOf(fetchProducts.pending, fetchProductsByCategory.pending),
         state => {

@@ -1,6 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Product } from '../types/productType';
-import { getProducts, getProductsByCategory } from '../api/productsApi';
+import {
+  getProducts,
+  getProductsByCategory,
+  deleteProduct,
+} from '../api/productsApi';
 import axios from 'axios';
 import { cache, CACHE_KEYS } from '../../../storage/cache';
 import { checkIsOffline } from '../../../utils/network';
@@ -56,6 +60,24 @@ export const fetchProductsByCategory = createAsyncThunk<Product[], string>(
       if (axios.isAxiosError(error)) {
         return rejectWithValue(
           error.response?.data?.message || 'Failed to get products',
+        );
+      }
+      return rejectWithValue('Un expected error');
+    }
+  },
+);
+
+export const removeProduct = createAsyncThunk<string, string>(
+  'deleteProduct',
+  async (id, { rejectWithValue }) => {
+    try {
+      await deleteProduct(id);
+      cache.removeProductFromCache(id);
+      return id;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to delete the product',
         );
       }
       return rejectWithValue('Un expected error');

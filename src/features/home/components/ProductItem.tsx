@@ -1,14 +1,44 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Alert } from 'react-native';
 import React from 'react';
-import { url } from 'zod';
+import Toast from 'react-native-simple-toast';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { Product } from '../types/productType';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { AdminEmail } from '../../../api/apiConst';
+import { removeProduct } from '../redux/productThunks';
 
 type Props = {
   product: Product;
-}
+};
 
-export default function ProductItem({product}: Props) {
+export default function ProductItem({ product }: Props) {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.auth);
+
+  const handleDelete = () => {
+    Alert.alert('Delete Product', `Do you want to delete ${product.title}?`, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          const result = await dispatch(removeProduct(String(product.id)));
+          if (removeProduct.rejected.match(result)) {
+            Toast.show(
+              (result.payload as string) ??
+                result.error.message ??
+                'Delete Failed',
+              Toast.LONG,
+            );
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <View style={styles.card}>
       <Image
@@ -31,7 +61,14 @@ export default function ProductItem({product}: Props) {
           </View>
         </View>
       </View>
-      <Text style={styles.price}>{product.price}$</Text>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.price}>{product.price}$</Text>
+        {user!.email === AdminEmail ? (
+          <Text style={styles.deleteBtn} onPress={handleDelete}>
+            delete
+          </Text>
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -82,6 +119,16 @@ const styles = StyleSheet.create({
   rate: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4
+    gap: 4,
+  },
+  deleteBtn: {
+    padding: 4,
+    marginTop: 8,
+    color: 'red',
+    fontSize: 14,
+    fontWeight: 'medium',
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: 'red',
   },
 });
