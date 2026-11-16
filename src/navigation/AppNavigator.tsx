@@ -3,6 +3,7 @@ import LoginScreen from '../features/auth/LoginScreen';
 import SplashScreen from '../features/splash/SplashScreen';
 import HomeScreen from '../features/home/HomeScreen';
 import { RootStackParamList } from './types';
+import MainTabs from './MainTabs';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,15 +32,8 @@ export default function AppNavigator() {
       />
       <Stack.Screen
         name={'home'}
-        component={HomeScreen}
-        options={{
-          headerShown: true,
-          headerTitle: 'Products',
-          headerTitleStyle: {
-            fontSize: 24,
-            fontWeight: 'bold',
-          },
-        }}
+        component={MainTabs}
+        
       />
     </Stack.Navigator>
   );
