@@ -7,7 +7,7 @@ export default function ProductList() {
     <View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={[0, 1, 2]}
+        data={[0, 1, 2, 5, 5, 5, 5, 7, 5, 5, 5, 5, 2, 5, 5, 5, 5]}
         renderItem={item => <ProductItem />}
       />
     </View>

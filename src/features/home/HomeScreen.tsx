@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { useAppSelector } from '../../store/hooks';
 import ProductList from './components/ProductList';
@@ -8,12 +8,12 @@ export default function HomeScreen() {
   const user = useAppSelector(state => state.auth.user);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.categories}>Categories:</Text>
-      <FilterList/>
+      <FilterList />
       <Text style={styles.products}>Products:</Text>
       <ProductList />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
   products: {
     marginVertical: 12,
     fontWeight: 'bold',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });

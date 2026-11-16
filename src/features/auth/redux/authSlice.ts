@@ -7,7 +7,7 @@ const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   isLoading: false,
-  error: null as string | null,
+  error: null,
 };
 
 const authSlice = createSlice({
