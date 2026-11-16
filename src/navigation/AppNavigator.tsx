@@ -29,7 +29,18 @@ export default function AppNavigator() {
           },
         }}
       />
-      <Stack.Screen name={'home'} component={HomeScreen} />
+      <Stack.Screen
+        name={'home'}
+        component={HomeScreen}
+        options={{
+          headerShown: true,
+          headerTitle: 'Products',
+          headerTitleStyle: {
+            fontSize: 24,
+            fontWeight: 'bold',
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 }

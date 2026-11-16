@@ -1,15 +1,34 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import ProductList from './components/ProductList';
+import FilterList from './components/FilterList';
 
 export default function HomeScreen() {
   const user = useAppSelector(state => state.auth.user);
 
   return (
-    <SafeAreaView>
-      <Text style={{ fontSize: 48 }}>{user?.username}</Text>
-      <Text style={{ fontSize: 48 }}>This is Home</Text>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.categories}>Categories:</Text>
+      <FilterList/>
+      <Text style={styles.products}>Products:</Text>
+      <ProductList />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+  categories: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 12,
+  },
+  products: {
+    marginVertical: 12,
+    fontWeight: 'bold',
+    fontSize: 16
+  }
+});
