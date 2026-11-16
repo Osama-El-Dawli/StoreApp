@@ -1,19 +1,19 @@
 import {
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
-  View,
 } from 'react-native';
-import LoginForm from '../components/LoginForm';
+import LoginForm from './components/LoginForm';
 import Ionicons from '@react-native-vector-icons/ionicons';
 
 export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{ flex: 1 }}
+      behavior="padding"
+      enabled
+      keyboardVerticalOffset={140}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}

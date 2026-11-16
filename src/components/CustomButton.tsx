@@ -2,12 +2,21 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 type CustomButtonProps = {
   text: string;
+  disabled?: boolean;
   onPress: () => void | Promise<void>;
 };
 
-export default function CustomButton({ text, onPress }: CustomButtonProps) {
+export default function CustomButton({
+  text,
+  disabled = false,
+  onPress,
+}: CustomButtonProps) {
   return (
-    <Pressable onPress={onPress} style={styles.btn}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.btn, disabled && styles.disableBtn]}
+      disabled={disabled}
+    >
       <Text style={styles.text}>{text}</Text>
     </Pressable>
   );
@@ -25,5 +34,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'medium',
+  },
+  disableBtn: {
+    backgroundColor: '#ffd8a6',
   },
 });

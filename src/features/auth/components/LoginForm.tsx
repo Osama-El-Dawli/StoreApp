@@ -1,12 +1,16 @@
 import { View } from 'react-native';
-import CustomTextInput from './CustomTextInput';
-import CustomButton from './CustomButton';
+import CustomTextInput from '../../../components/CustomTextInput';
+import CustomButton from '../../../components/CustomButton';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData, loginSchema } from '../schemas/LoginSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../../navigation/types';
+import { login } from '../redux/authThunks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { RootState } from '../../../store/store';
+import Toast from 'react-native-simple-toast';
 
 type LoginNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -15,6 +19,12 @@ type LoginNavigationProp = NativeStackNavigationProp<
 
 export default function LoginForm() {
   const navigation = useNavigation<LoginNavigationProp>();
+
+  const dispatch = useAppDispatch();
+  const { isLoading, error, user } = useAppSelector(
+    (state: RootState) => state.auth,
+  );
+
   const {
     control,
     handleSubmit,
@@ -23,9 +33,22 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log('Form Data:', data);
-    navigation.replace('home');
+  const onSubmit = async (data: LoginFormData) => {
+    const result = await dispatch(
+      login({
+        username: data.username,
+        password: data.password,
+      }),
+    );
+
+    if (login.fulfilled.match(result)) {
+      navigation.navigate('home');
+    } else {
+      Toast.show(
+        result.payload || result.error.message || 'Login failed',
+        Toast.LONG,
+      );
+    }
   };
 
   return (
@@ -59,7 +82,11 @@ export default function LoginForm() {
         )}
       />
 
-      <CustomButton text="Login" onPress={handleSubmit(onSubmit)} />
+      <CustomButton
+        text={isLoading ? 'Logging in...' : 'Login'}
+        disabled={isLoading}
+        onPress={handleSubmit(onSubmit)}
+      />
     </View>
   );
 }

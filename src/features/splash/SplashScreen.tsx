@@ -3,12 +3,12 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import animatedSplash from '../assets/lottie/splash.json';
-import { RootStackParamList } from '../navigation/types';
+import animatedSplash from '../../assets/lottie/splash.json';
+import { RootStackParamList } from '../../navigation/types';
 
 type Prop = NativeStackScreenProps<RootStackParamList, 'splash'>;
 
-export default function SplashScreen({navigation}: Prop) {
+export default function SplashScreen({ navigation }: Prop) {
   return (
     <SafeAreaView style={styles.container}>
       <LottieView
