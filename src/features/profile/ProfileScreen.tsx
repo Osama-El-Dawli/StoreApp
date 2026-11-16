@@ -8,8 +8,9 @@ import InfoRow from './components/InfoRow';
 import CustomButton from '../../components/CustomButton';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
+import { AdminEmail } from '../../api/apiConst';
 
-type Nav = NativeStackNavigationProp<RootStackParamList>
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ProfileScreen() {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     await clearTokens();
     dispatch(logout());
-    navigation.replace('login')
+    navigation.replace('login');
   };
 
   return (
@@ -29,13 +30,15 @@ export default function ProfileScreen() {
         {user!.firstName} {user!.lastName}
       </Text>
       <Text style={styles.username}>{user!.username}</Text>
-
       <View style={styles.card}>
         <InfoRow label="Username" value={user!.username} />
         <InfoRow label="Email" value={user!.email} />
         <InfoRow label="Gender" value={user!.gender} />
+        <InfoRow
+          label="Role"
+          value={user!.email === AdminEmail ? 'Admin' : 'User'}
+        />
       </View>
-
       <CustomButton
         style={styles.logoutBtn}
         text="Logout"
