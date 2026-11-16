@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",
+    "@react-native-community/netinfo": "^12.0.1",
     "@react-native-vector-icons/ionicons": "^14.0.0",
     "@react-native/new-app-screen": "0.88.1",
     "@react-navigation/native": "^7.5.1",
@@ -24,6 +25,8 @@
     "react-native-auto-skeleton": "^0.1.33",
     "react-native-axios": "^0.17.1",
     "react-native-keychain": "^11.0.0",
+    "react-native-mmkv": "^4.3.2",
+    "react-native-nitro-modules": "^0.37.2",
     "react-native-safe-area-context": "^5.11.1",
     "react-native-screens": "^4.30.1",
     "react-native-simple-toast": "^3.3.2",

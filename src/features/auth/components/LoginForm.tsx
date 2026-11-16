@@ -42,7 +42,7 @@ export default function LoginForm() {
     );
 
     if (login.fulfilled.match(result)) {
-      navigation.navigate('home');
+      navigation.replace('home');
     } else {
       Toast.show(
         result.payload || result.error.message || 'Login failed',

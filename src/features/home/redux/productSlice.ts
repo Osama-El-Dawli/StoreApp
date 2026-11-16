@@ -32,6 +32,7 @@ const ProductSlice = createSlice({
       .addMatcher(
         isAnyOf(fetchProducts.rejected, fetchProductsByCategory.rejected),
         (state, action) => {
+          if (action.meta.aborted) return;
           state.isLoading = false;
           state.error =
             (action.payload as string) ??

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf, PayloadAction } from '@reduxjs/toolkit';
 import { getMe, login } from './authThunks';
 import { AuthState } from '../types/authTypes';
 
@@ -30,10 +30,6 @@ const authSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(login.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(login.fulfilled, (state, action) => {
         const { accessToken, refreshToken, ...user } = action.payload;
         state.isLoading = false;
@@ -49,10 +45,6 @@ const authSlice = createSlice({
             action.error.message ??
             'Login Failed');
       })
-      .addCase(getMe.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(getMe.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
@@ -61,7 +53,13 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error =
           action.payload ?? action.error.message ?? 'Failed to fetch the user';
-      });
+      })
+      .addMatcher(
+        isAnyOf(getMe.pending, login.pending), (state) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      );
   },
 });
 
