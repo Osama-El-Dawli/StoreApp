@@ -1,24 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import LoginForm from '../components/LoginForm';
 import Ionicons from '@react-native-vector-icons/ionicons';
 
 export default function LoginScreen() {
   return (
-    <View style={styles.container}>
-      <Ionicons
-        name="storefront-outline"
-        size={100}
-        color="#f97316"
-        style={styles.icon}
-      />
-      <Text style={styles.title}>Store App</Text>
-      <LoginForm />
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Ionicons
+          name="storefront-outline"
+          size={100}
+          color="#f97316"
+          style={styles.icon}
+        />
+        <Text style={styles.title}>Store App</Text>
+        <LoginForm />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     paddingHorizontal: 16,
   },
   title: {

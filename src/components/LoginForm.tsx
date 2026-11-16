@@ -32,14 +32,14 @@ export default function LoginForm() {
     <View>
       <Controller
         control={control}
-        name="email"
+        name="username"
         render={({ field: { onChange, value } }) => (
           <CustomTextInput
-            title="Email"
+            title="Username"
             value={value}
-            placeholder="user@example.com"
+            placeholder="Enter Your Username"
             onChangeText={onChange}
-            error={errors.email?.message}
+            error={errors.username?.message}
           />
         )}
       />

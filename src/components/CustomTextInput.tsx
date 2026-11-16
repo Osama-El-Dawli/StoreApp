@@ -30,8 +30,7 @@ export default function CustomTextInput({
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <KeyboardAvoidingView behavior="padding">
-      <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+      <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         {isPassword && (
           <Ionicons
@@ -51,8 +50,7 @@ export default function CustomTextInput({
           style={[styles.input, isFocused && styles.inputFocused]}
         />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
   );
 }
 

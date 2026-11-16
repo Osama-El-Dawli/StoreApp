@@ -1,0 +1,1 @@
+export const loginEndPoint = '/auth/login';
