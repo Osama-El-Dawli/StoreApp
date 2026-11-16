@@ -1,14 +1,31 @@
 import { View, Text, FlatList } from 'react-native';
 import React from 'react';
 import ProductItem from './ProductItem';
+import { Product } from '../types/productType';
+import { AutoSkeletonView } from 'react-native-auto-skeleton';
 
-export default function ProductList() {
+type Props = {
+  products: Product[];
+  isLoading: boolean;
+  ListHeaderComponent?: React.ReactElement;
+};
+
+export default function ProductList({
+  products,
+  isLoading,
+  ListHeaderComponent,
+}: Props) {
   return (
     <View>
       <FlatList
+        ListHeaderComponent={ListHeaderComponent}
         showsVerticalScrollIndicator={false}
-        data={[0, 1, 2, 5, 5, 5, 5, 7, 5, 5, 5, 5, 2, 5, 5, 5, 5]}
-        renderItem={item => <ProductItem />}
+        data={products}
+        renderItem={products => (
+          <AutoSkeletonView isLoading={isLoading}>
+            <ProductItem product={products.item} />
+          </AutoSkeletonView>
+        )}
       />
     </View>
   );

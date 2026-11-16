@@ -1,11 +1,16 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
+import { AutoSkeletonView } from 'react-native-auto-skeleton';
 
-export default function FilterItem() {
+type Props = {
+  category: string;
+};
+
+export default function FilterItem({ category }: Props) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>FilterItem</Text>
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.text}>{category}</Text>
+      </View>
   );
 }
 

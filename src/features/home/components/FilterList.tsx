@@ -1,15 +1,27 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import React from 'react';
 import FilterItem from './FilterItem';
+import { AutoSkeletonView } from 'react-native-auto-skeleton';
 
-export default function FilterList() {
+type Props = {
+  categories: string[];
+  isLoading: boolean;
+};
+
+export default function FilterList({ categories, isLoading }: Props) {
   return (
     <View>
-      <FlatList style={styles.list}
+      <FlatList
+        style={styles.list}
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={[0, 1, 2]}
-        renderItem={() => <FilterItem />}
+        data={categories}
+        keyExtractor={item => item}
+        renderItem={categories => (
+          <AutoSkeletonView isLoading = {isLoading}>
+            <FilterItem category={categories.item} />
+          </AutoSkeletonView>
+        )}
       />
     </View>
   );
@@ -18,5 +30,5 @@ export default function FilterList() {
 const styles = StyleSheet.create({
   list: {
     marginTop: 8,
-  }
-})
+  },
+});
