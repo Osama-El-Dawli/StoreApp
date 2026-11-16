@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getTokens } from '../features/auth/storage/tokenStorage';
 
 export const api = axios.create({
   baseURL: 'https://dummyjson.com',
@@ -6,4 +7,12 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+api.interceptors.request.use(async config => {
+  const tokens = await getTokens();
+  if (tokens?.accessToken) {
+    config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+  }
+  return config;
 });

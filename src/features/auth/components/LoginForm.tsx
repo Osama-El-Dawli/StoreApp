@@ -21,7 +21,7 @@ export default function LoginForm() {
   const navigation = useNavigation<LoginNavigationProp>();
 
   const dispatch = useAppDispatch();
-  const { isLoading, error, user } = useAppSelector(
+  const { isLoading} = useAppSelector(
     (state: RootState) => state.auth,
   );
 

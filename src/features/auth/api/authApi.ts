@@ -1,6 +1,6 @@
-import { loginEndPoint } from '../../../api/apiConst';
+import { getMeEndPoint, loginEndPoint } from '../../../api/apiConst';
 import { api } from '../../../api/apiService';
-import { LoginRequest, LoginResponse } from '../types/authTypes';
+import { LoginRequest, LoginResponse, User } from '../types/authTypes';
 
 export const loginApi = async (
   loginRequestBody: LoginRequest,
@@ -11,4 +11,9 @@ export const loginApi = async (
   );
 
   return response.data;
+};
+
+export const getMeApi = async (): Promise<User> => {
+  const { data } = await api.get<User>(getMeEndPoint);
+  return data;
 };

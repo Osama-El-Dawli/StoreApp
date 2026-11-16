@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { login } from './authThunks';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getMe, login } from './authThunks';
 import { AuthState } from '../types/authTypes';
 
 const initialState: AuthState = {
@@ -19,6 +19,13 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.error = null;
+    },
+    setTokens: (
+      state,
+      action: PayloadAction<{ accessToken: string; refreshToken: string }>,
+    ) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
     },
   },
   extraReducers: builder => {
@@ -41,10 +48,23 @@ const authSlice = createSlice({
             (action.payload as string | undefined) ??
             action.error.message ??
             'Login Failed');
+      })
+      .addCase(getMe.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getMe.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(getMe.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          action.payload ?? action.error.message ?? 'Failed to fetch the user';
       });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setTokens } = authSlice.actions;
 
 export default authSlice.reducer;
