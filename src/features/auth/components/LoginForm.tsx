@@ -12,18 +12,13 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
 import Toast from 'react-native-simple-toast';
 
-type LoginNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'login'
->;
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function LoginForm() {
-  const navigation = useNavigation<LoginNavigationProp>();
+  const navigation = useNavigation<Nav>();
 
   const dispatch = useAppDispatch();
-  const { isLoading} = useAppSelector(
-    (state: RootState) => state.auth,
-  );
+  const { isLoading } = useAppSelector((state: RootState) => state.auth);
 
   const {
     control,

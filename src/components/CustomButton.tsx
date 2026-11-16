@@ -1,20 +1,22 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
 
 type CustomButtonProps = {
   text: string;
   disabled?: boolean;
   onPress: () => void | Promise<void>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export default function CustomButton({
   text,
   disabled = false,
+  style,
   onPress,
 }: CustomButtonProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.btn, disabled && styles.disableBtn]}
+      style={[style, styles.btn, disabled && styles.disableBtn]}
       disabled={disabled}
     >
       <Text style={styles.text}>{text}</Text>
