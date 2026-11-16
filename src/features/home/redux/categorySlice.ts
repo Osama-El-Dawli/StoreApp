@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchCategories } from './categoryThunks';
+import { Category } from '../types/categoryType';
 
 interface CategoryState {
   isLoading: boolean;
-  items: string[];
+  items: Category[];
   error: string | null;
 }
 
