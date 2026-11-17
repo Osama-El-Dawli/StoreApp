@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonIgnoreView.mm b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonIgnoreView.mm
+index 67209d0..bd5aa7e 100644
+--- a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonIgnoreView.mm
++++ b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonIgnoreView.mm
+@@ -9,7 +9,7 @@
+ 
+ #import <React/RCTViewManager.h>
+ #import <React/RCTUIManager.h>
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ #if __has_include(<react_native_auto_skeleton/react_native_auto_skeleton-Swift.h>)
+ #import <react_native_auto_skeleton/react_native_auto_skeleton-Swift.h>
+ #else
+diff --git a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonView.mm b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonView.mm
+index e7b0fb8..395c9e7 100644
+--- a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonView.mm
++++ b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonView.mm
+@@ -16,7 +16,7 @@
+ #import <React/RCTUIManager.h>
+ #import <React/RCTViewManager.h>
+ #import <react/renderer/graphics/Color.h>
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ 
+ using namespace facebook::react;
+ 
+diff --git a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonViewManager.mm b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonViewManager.mm
+index a9a2783..dc8da35 100644
+--- a/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonViewManager.mm
++++ b/node_modules/react-native-auto-skeleton/ios/React/AutoSkeletonViewManager.mm
+@@ -1,7 +1,7 @@
+ #import <React/RCTUIManager.h>
+ #import <React/RCTViewManager.h>
+ #import "AutoSkeletonView.h"
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ #if __has_include(<react_native_auto_skeleton/react_native_auto_skeleton-Swift.h>)
+ #import <react_native_auto_skeleton/react_native_auto_skeleton-Swift.h>
+ #else
