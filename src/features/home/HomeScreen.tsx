@@ -111,7 +111,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
+    flex: 1,
   },
   categories: {
     fontSize: 16,

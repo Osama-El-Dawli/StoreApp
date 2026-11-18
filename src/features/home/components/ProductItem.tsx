@@ -9,19 +9,17 @@ import { removeProduct } from '../redux/productThunks';
 
 type Props = {
   product: Product;
-  onPress: () => void
+  onPress: () => void;
 };
 
-function ProductItem({ product ,onPress }: Props) {
+function ProductItem({ product, onPress }: Props) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
+  const isAdmin = user?.email === AdminEmail;
 
   const handleDelete = () => {
     Alert.alert('Delete Product', `Do you want to delete ${product.title}?`, [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
+      { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
         style: 'destructive',
@@ -41,38 +39,45 @@ function ProductItem({ product ,onPress }: Props) {
   };
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+    >
+      <View style={styles.imageWrapper}>
+        <Image
+          source={{ uri: product.thumbnail }}
+          resizeMode="cover"
+          style={styles.image}
+        />
 
-    <View style={styles.card}>
-      <Image
-        source={{
-          uri: product.thumbnail,
-        }}
-        resizeMode="cover"
-        style={styles.image}
-      />
-      <View style={styles.info}>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
-          {product.description}
-        </Text>
-        <View style={styles.container}>
-          <Text style={styles.category}>{product.category}</Text>
-          <View style={styles.rate}>
-            <Text>{product.rating}</Text>
-            <Ionicons name="star" color={'orange'} />
-          </View>
+        <View style={styles.ratingBadge}>
+          <Ionicons name="star" size={12} color="#FFA500" />
+          <Text style={styles.ratingText}>{product.rating}</Text>
         </View>
-      </View>
-      <View style={{ alignItems: 'center' }}>
-        <Text style={styles.price}>{product.price}$</Text>
-        {user!.email === AdminEmail ? (
-          <Text style={styles.deleteBtn} onPress={handleDelete}>
-            delete
-          </Text>
+
+        {isAdmin ? (
+          <Pressable
+            onPress={handleDelete}
+            hitSlop={8}
+            style={styles.deleteBtn}
+          >
+            <Ionicons name="trash-outline" size={16} color="#fff" />
+          </Pressable>
         ) : null}
       </View>
-    </View>
+
+      <View style={styles.info}>
+        <Text style={styles.category} numberOfLines={1}>
+          {product.category}
+        </Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {product.title}
+        </Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {product.description}
+        </Text>
+        <Text style={styles.price}>${product.price}</Text>
+      </View>
     </Pressable>
   );
 }
@@ -81,60 +86,85 @@ export default React.memo(ProductItem);
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 16,
-    flexDirection: 'row',
-    height: 130,
-    borderWidth: 2,
-    borderColor: 'orange',
+    flex: 1,
+    margin: 6,
+    backgroundColor: '#fff',
     borderRadius: 16,
-    alignItems: 'center',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  cardPressed: {
+    opacity: 0.92,
+    transform: [{ scale: 0.98 }],
+  },
+  imageWrapper: {
+    width: '100%',
+    aspectRatio: 1,
+    backgroundColor: '#f2f2f2',
   },
   image: {
-    width: 120,
-    height: 120,
+    width: '100%',
+    height: '100%',
   },
-  info: {
-    marginHorizontal: 8,
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
-    marginVertical: 4,
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: 12,
-    color: '#777',
-    marginBottom: 8,
-  },
-  category: {
-    color: 'orange',
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  price: {
-    fontSize: 20,
-    color: '#ff751a',
-    fontWeight: 'bold',
-    marginRight: 12,
-  },
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  rate: {
+  ratingBadge: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 3,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+  },
+  ratingText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#333',
   },
   deleteBtn: {
-    padding: 4,
-    marginTop: 8,
-    color: 'red',
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(220,38,38,0.9)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  info: {
+    padding: 10,
+  },
+  category: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#ff751a',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  title: {
     fontSize: 14,
-    fontWeight: 'medium',
-    borderRadius: 4,
-    borderWidth: 0.5,
-    borderColor: 'red',
+    fontWeight: 'bold',
+    color: '#222',
+    minHeight: 36,
+  },
+  description: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 4,
+    minHeight: 28,
+  },
+  price: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#ff751a',
+    marginTop: 8,
   },
 });

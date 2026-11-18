@@ -19,9 +19,11 @@ export default function ProductList({
 }: Props) {
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Product>) => (
+      <View style={{flex: 1}}>
       <AutoSkeletonView isLoading={isLoading}>
         <ProductItem onPress={() => onProductPress(item)} product={item} />
       </AutoSkeletonView>
+      </View>
     ),
     [isLoading],
   );
@@ -29,6 +31,9 @@ export default function ProductList({
   return (
     <View>
       <FlatList
+        numColumns={2}
+        keyExtractor={item => String(item.id)}
+        contentContainerStyle={{ padding: 12 }}
         ListHeaderComponent={ListHeaderComponent}
         showsVerticalScrollIndicator={false}
         data={products}
