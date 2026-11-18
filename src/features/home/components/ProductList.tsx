@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import ProductItem from './ProductItem';
 import { Product } from '../types/productType';
 import { AutoSkeletonView } from 'react-native-auto-skeleton';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 type Props = {
   products: Product[];
@@ -22,18 +23,27 @@ export default function ProductList({
   ListHeaderComponent,
 }: Props) {
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Product>) => (
-      <View style={{ flex: 1 }}>
-        <AutoSkeletonView isLoading={isLoading}>
-          <ProductItem
-            product={item}
-            quantity={quantities[String(item.id)] ?? 0}
-            onQuantityChange={onQuantityChange}
-            onPress={() => onProductPress(item)}
-          />
-        </AutoSkeletonView>
-      </View>
-    ),
+    ({ item, index }: ListRenderItemInfo<Product>) => {
+      const row = Math.min(Math.floor(index / 2), 6);
+      return (
+        <Animated.View
+          style={{ flex: 1 }}
+          entering={FadeInDown.delay(row * 300)
+            .springify()
+            .damping(20)
+            .withInitialValues({ transform: [{ translateY: 100 }] })}
+        >
+          <AutoSkeletonView isLoading={isLoading}>
+            <ProductItem
+              product={item}
+              quantity={quantities[String(item.id)] ?? 0}
+              onQuantityChange={onQuantityChange}
+              onPress={() => onProductPress(item)}
+            />
+          </AutoSkeletonView>
+        </Animated.View>
+      );
+    },
     [isLoading, quantities, onQuantityChange, onProductPress],
   );
 

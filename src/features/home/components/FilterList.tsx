@@ -1,7 +1,8 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, FlatList, StyleSheet, ListRenderItemInfo } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
 import FilterItem from './FilterItem';
 import { Category } from '../types/categoryType';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 
 type Props = {
   categories: Category[];
@@ -10,16 +11,43 @@ type Props = {
   onSelectCategory: (category: string) => void;
 };
 
+const ALL_CATEGORY: Category = {
+  name: 'all',
+  slug: 'all',
+};
+
+
 export default function FilterList({
   categories,
   isLoading,
   selectedCategory,
   onSelectCategory,
 }: Props) {
-  const allCategories: Category = {
-    name: 'all',
-    slug: 'all',
-  };
+  const data = useMemo(() => [ALL_CATEGORY, ...categories], [categories]);
+
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<Category>) => (
+      <Animated.View
+        entering={FadeInRight.delay(
+          Math.min(index, 8) * 70,
+        )
+          .springify()
+          .damping(50)
+          .withInitialValues({
+            opacity: 0,
+            transform: [{ translateX: 60 }],
+          })}
+      >
+        <FilterItem
+          isLoading={isLoading}
+          isSelected={item.slug === selectedCategory}
+          onPress={() => onSelectCategory(item.slug)}
+          category={item.name}
+        />
+      </Animated.View>
+    ),
+    [isLoading, selectedCategory, onSelectCategory],
+  );
 
   return (
     <View>
@@ -27,15 +55,10 @@ export default function FilterList({
         style={styles.list}
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={[allCategories, ...categories]}
-        renderItem={categories => (
-          <FilterItem
-            isLoading={isLoading}
-            isSelected={categories.item.slug === selectedCategory}
-            onPress={() => onSelectCategory(categories.item.slug)}
-            category={categories.item.name}
-          />
-        )}
+        data={data}
+        extraData={selectedCategory}
+        keyExtractor={item => item.slug}
+        renderItem={renderItem}
       />
     </View>
   );
