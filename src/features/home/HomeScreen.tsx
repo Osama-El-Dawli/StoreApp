@@ -1,16 +1,29 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import ProductList from './components/ProductList';
 import FilterList from './components/FilterList';
 import { fetchCategories } from './redux/categoryThunks';
 import { fetchProducts, fetchProductsByCategory } from './redux/productThunks';
 import { useIsOffline } from '../../hooks/useIsOffline';
+import CustomHeader from '../../components/CustomHeader';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Product } from './types/productType';
+import ProductModal from './components/ProductModal';
 
 export default function HomeScreen() {
   const isOffline = useIsOffline();
   const dispatch = useAppDispatch();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const handelProductPress = useCallback((product: Product) => {
+    setSelectedProduct(product);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setSelectedProduct(null);
+  }, []);
 
   const {
     items: categories,
@@ -37,22 +50,46 @@ export default function HomeScreen() {
     return () => products.abort();
   }, [selectedCategory, dispatch]);
 
+  const categoriesList = useMemo(
+    () => (
+      <>
+        <Text style={styles.categories}>Categories:</Text>
+        {categoriesError != null ? (
+          <Text style={{ color: 'red', alignSelf: 'center' }}>
+            {categoriesError}
+          </Text>
+        ) : null}
+        <FilterList
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          isLoading={categoriesLoading}
+          categories={categories}
+        />
+        <Text style={styles.products}>Products:</Text>
+      </>
+    ),
+    [categories, categoriesError, categoriesLoading, selectedCategory],
+  );
+
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <CustomHeader title="Products" />
       {isOffline ? (
-        <View style={{
-          alignItems: 'center',
-          backgroundColor: '#ff0000',
-        }}>
-        <Text
+        <View
           style={{
-            paddingVertical: 4,
-            color: '#fff',
+            alignItems: 'center',
+            backgroundColor: '#ff0000',
           }}
+        >
+          <Text
+            style={{
+              paddingVertical: 4,
+              color: '#fff',
+            }}
           >
-          Connect to the internet
-        </Text>
-          </View>
+            Connect to the internet
+          </Text>
+        </View>
       ) : null}
       <View style={styles.container}>
         {productError != null ? (
@@ -61,28 +98,14 @@ export default function HomeScreen() {
           </Text>
         ) : null}
         <ProductList
+          onProductPress={handelProductPress}
           isLoading={productLoading}
           products={products}
-          ListHeaderComponent={
-            <>
-              <Text style={styles.categories}>Categories:</Text>
-              {categoriesError != null ? (
-                <Text style={{ color: 'red', alignSelf: 'center' }}>
-                  {categoriesError}
-                </Text>
-              ) : null}
-              <FilterList
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-                isLoading={categoriesLoading}
-                categories={categories}
-              />
-              <Text style={styles.products}>Products:</Text>
-            </>
-          }
+          ListHeaderComponent={categoriesList}
         />
+        <ProductModal product={selectedProduct} onClose={handleCloseModal} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, Alert, Pressable } from 'react-native';
 import React from 'react';
 import Toast from 'react-native-simple-toast';
 import Ionicons from '@react-native-vector-icons/ionicons';
@@ -9,9 +9,10 @@ import { removeProduct } from '../redux/productThunks';
 
 type Props = {
   product: Product;
+  onPress: () => void
 };
 
-export default function ProductItem({ product }: Props) {
+function ProductItem({ product ,onPress }: Props) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
 
@@ -40,6 +41,8 @@ export default function ProductItem({ product }: Props) {
   };
 
   return (
+    <Pressable onPress={onPress}>
+
     <View style={styles.card}>
       <Image
         source={{
@@ -70,8 +73,11 @@ export default function ProductItem({ product }: Props) {
         ) : null}
       </View>
     </View>
+    </Pressable>
   );
 }
+
+export default React.memo(ProductItem);
 
 const styles = StyleSheet.create({
   card: {

@@ -11,11 +11,8 @@ export default function MainTabs() {
     <Tab.Navigator
       initialRouteName="homeTab"
       screenOptions={{
+        headerShown: false,
         sceneStyle: { backgroundColor: 'white' },
-        headerTitleStyle: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
         tabBarActiveTintColor: '#e67e22',
         tabBarInactiveTintColor: '#999999',
       }}
@@ -25,8 +22,6 @@ export default function MainTabs() {
         component={HomeScreen}
         options={{
           title: 'Home',
-          headerShown: true,
-          headerTitle: 'Products',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
@@ -42,13 +37,10 @@ export default function MainTabs() {
         component={ProfileScreen}
         options={{
           title: 'Profile',
-          headerShown: true,
           tabBarBadgeStyle: {
             fontSize: 24,
             color: 'red',
           },
-          headerTitle: 'My Profile',
-          headerTitleAlign: 'center',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}

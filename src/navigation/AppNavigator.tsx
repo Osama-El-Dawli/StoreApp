@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../features/auth/LoginScreen';
 import SplashScreen from '../features/splash/SplashScreen';
-import HomeScreen from '../features/home/HomeScreen';
 import { RootStackParamList } from './types';
 import MainTabs from './MainTabs';
 
@@ -21,20 +20,16 @@ export default function AppNavigator() {
         name={'login'}
         component={LoginScreen}
         options={{
-          headerShown: true,
-          headerTitle: 'Login',
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: '#fce7cd',
-          },
+          // headerShown: true,
+          // headerTitle: 'Login',
+          // headerTitleAlign: 'center',
+          // headerShadowVisible: false,
+          // headerStyle: {
+          //   backgroundColor: '#fce7cd',
+          // },
         }}
       />
-      <Stack.Screen
-        name={'home'}
-        component={MainTabs}
-        
-      />
+      <Stack.Screen name={'home'} component={MainTabs} />
     </Stack.Navigator>
   );
 }

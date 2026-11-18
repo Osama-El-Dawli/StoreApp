@@ -6,35 +6,36 @@ import {
 } from 'react-native';
 import LoginForm from './components/LoginForm';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/types';
-import { useNavigation } from '@react-navigation/native';
-
+import CustomHeader from '../../components/CustomHeader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior="padding"
-      enabled
-      keyboardVerticalOffset={140}
-    >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
         style={{ flex: 1 }}
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
+        behavior="padding"
+        enabled
+        keyboardVerticalOffset={24}
       >
-        <Ionicons
-          name="storefront-outline"
-          size={100}
-          color="#f97316"
-          style={styles.icon}
-        />
-        <Text style={styles.title}>Store App</Text>
-        <LoginForm />
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <CustomHeader title="Login" />
+          <Ionicons
+            name="storefront-outline"
+            size={100}
+            color="#f97316"
+            style={styles.icon}
+          />
+          <Text style={styles.title}>Store App</Text>
+          <LoginForm />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

@@ -9,6 +9,8 @@ import CustomButton from '../../components/CustomButton';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { AdminEmail } from '../../api/apiConst';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomHeader from '../../components/CustomHeader';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -24,27 +26,30 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: user!.image }} style={styles.avatar} />
-      <Text style={styles.name}>
-        {user!.firstName} {user!.lastName}
-      </Text>
-      <Text style={styles.username}>{user!.username}</Text>
-      <View style={styles.card}>
-        <InfoRow label="Username" value={user!.username} />
-        <InfoRow label="Email" value={user!.email} />
-        <InfoRow label="Gender" value={user!.gender} />
-        <InfoRow
-          label="Role"
-          value={user!.email === AdminEmail ? 'Admin' : 'User'}
+    <SafeAreaView style={{ flex: 1 }}>
+      <CustomHeader title="My Profile" centerTitle={true} />
+      <View style={styles.container}>
+        <Image source={{ uri: user!.image }} style={styles.avatar} />
+        <Text style={styles.name}>
+          {user!.firstName} {user!.lastName}
+        </Text>
+        <Text style={styles.username}>{user!.username}</Text>
+        <View style={styles.card}>
+          <InfoRow label="Username" value={user!.username} />
+          <InfoRow label="Email" value={user!.email} />
+          <InfoRow label="Gender" value={user!.gender} />
+          <InfoRow
+            label="Role"
+            value={user!.email === AdminEmail ? 'Admin' : 'User'}
+          />
+        </View>
+        <CustomButton
+          style={styles.logoutBtn}
+          text="Logout"
+          onPress={handleLogout}
         />
       </View>
-      <CustomButton
-        style={styles.logoutBtn}
-        text="Logout"
-        onPress={handleLogout}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 
