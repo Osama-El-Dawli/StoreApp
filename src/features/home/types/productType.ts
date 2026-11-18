@@ -6,6 +6,7 @@ export interface Product {
   rating: number;
   price: number;
   thumbnail: string;
+  stock: number;
 }
 
 export interface ProductResponse {

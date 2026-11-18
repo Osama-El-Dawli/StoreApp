@@ -10,25 +10,21 @@ import {
 import React from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { Product } from '../types/productType';
+import Quantity from './Quantity';
 
 type Props = {
   product: Product | null;
+  quantity: number;
+  onQuantityChange: (productId: string, quantity: number) => void;
   onClose: () => void;
 };
 
-function ProductModal({ product, onClose }: Props) {
+function ProductModal({ product, quantity, onQuantityChange, onClose }: Props) {
   return (
-    <Modal
-      visible={product != null}
-      transparent
-      onRequestClose={onClose}
-    >
+    <Modal visible={product != null} transparent onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
-          <Pressable
-            onPress={onClose}
-            style={styles.closeButton}
-          >
+          <Pressable onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={24} color="#000" />
           </Pressable>
 
@@ -45,6 +41,14 @@ function ProductModal({ product, onClose }: Props) {
                 <Text style={styles.category}>{product.category}</Text>
               </View>
               <Text style={styles.description}>{product.description}</Text>
+              <Text style={styles.stock}>{product.stock} in Stock</Text>
+
+              <Quantity
+                style={styles.stepper}
+                quantity={quantity}
+                stock={product.stock ?? 0}
+                onChange={q => onQuantityChange(String(product.id), q)}
+              />
             </ScrollView>
           ) : null}
         </Pressable>
@@ -111,5 +115,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: '#333',
+  },
+  stock: {
+    marginTop: 16,
+    fontSize: 16,
+    alignSelf: 'center',
+    color: '#16a34a',
+    fontWeight: '600',
+  },
+  stepper: {
+    alignSelf: 'center',
+    width: 160,
+    marginTop: 12,
   },
 });

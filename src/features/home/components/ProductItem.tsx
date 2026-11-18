@@ -6,16 +6,22 @@ import { Product } from '../types/productType';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { AdminEmail } from '../../../api/apiConst';
 import { removeProduct } from '../redux/productThunks';
+import Quantity from './Quantity';
 
 type Props = {
   product: Product;
+  quantity: number;
+  onQuantityChange: (productId: string, quantity: number) => void;
   onPress: () => void;
 };
 
-function ProductItem({ product, onPress }: Props) {
+function ProductItem({ product, quantity, onQuantityChange, onPress }: Props) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
   const isAdmin = user?.email === AdminEmail;
+
+  const stock = product.stock ?? 0;
+  const outOfStock = stock <= 0;
 
   const handleDelete = () => {
     Alert.alert('Delete Product', `Do you want to delete ${product.title}?`, [
@@ -76,7 +82,20 @@ function ProductItem({ product, onPress }: Props) {
         <Text style={styles.description} numberOfLines={2}>
           {product.description}
         </Text>
-        <Text style={styles.price}>${product.price}</Text>
+
+        <View style={styles.priceRow}>
+          <Text style={styles.price}>${product.price}</Text>
+          <Text style={[styles.stock, outOfStock && styles.stockOut]}>
+            {outOfStock ? 'Out of stock' : `${stock} in stock`}
+          </Text>
+        </View>
+
+        <Quantity
+          style={styles.stepper}
+          quantity={quantity}
+          stock={stock}
+          onChange={q => onQuantityChange(String(product.id), q)}
+        />
       </View>
     </Pressable>
   );
@@ -161,10 +180,26 @@ const styles = StyleSheet.create({
     marginTop: 4,
     minHeight: 28,
   },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
   price: {
     fontSize: 17,
     fontWeight: 'bold',
     color: '#ff751a',
-    marginTop: 8,
+  },
+  stock: {
+    fontSize: 11,
+    color: '#16a34a',
+    fontWeight: '600',
+  },
+  stockOut: {
+    color: '#dc2626',
+  },
+  stepper: {
+    marginTop: 10,
   },
 });

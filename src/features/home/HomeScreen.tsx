@@ -14,8 +14,14 @@ import ProductModal from './components/ProductModal';
 export default function HomeScreen() {
   const isOffline = useIsOffline();
   const dispatch = useAppDispatch();
+
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const handleQuantityChange = useCallback((id: string, quantity: number) => {
+    setQuantities(prev => ({ ...prev, [id]: quantity }));
+  }, []);
 
   const handelProductPress = useCallback((product: Product) => {
     setSelectedProduct(product);
@@ -98,12 +104,21 @@ export default function HomeScreen() {
           </Text>
         ) : null}
         <ProductList
+          onQuantityChange={handleQuantityChange}
+          quantities={quantities}
           onProductPress={handelProductPress}
           isLoading={productLoading}
           products={products}
           ListHeaderComponent={categoriesList}
         />
-        <ProductModal product={selectedProduct} onClose={handleCloseModal} />
+        <ProductModal
+          onQuantityChange={handleQuantityChange}
+          quantity={
+            selectedProduct ? quantities[String(selectedProduct.id)] ?? 0 : 0
+          }
+          product={selectedProduct}
+          onClose={handleCloseModal}
+        />
       </View>
     </SafeAreaView>
   );
