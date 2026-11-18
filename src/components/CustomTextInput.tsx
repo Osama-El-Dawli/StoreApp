@@ -30,27 +30,34 @@ export default function CustomTextInput({
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-      <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        {isPassword && (
-          <Ionicons
-            style={styles.icon}
-            name={isVisible ? 'eye' : 'eye-off'}
-            onPress={() => setIsVisible(!isVisible)}
-            size={24}
-          />
-        )}
-        <TextInput
-          value={value}
-          placeholder={placeholder}
-          onChangeText={onChangeText}
-          secureTextEntry={isPassword && !isVisible}
-          onBlur={() => setIsFocused(false)}
-          onFocus={() => setIsFocused(true)}
-          style={[styles.input, isFocused && styles.inputFocused]}
+    <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
+      {isPassword && (
+        <Ionicons
+          style={styles.icon}
+          name={isVisible ? 'eye' : 'eye-off'}
+          onPress={() => setIsVisible(!isVisible)}
+          size={24}
         />
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      </View>
+      )}
+      <TextInput
+        autoCapitalize="none"
+        value={value}
+        placeholderTextColor="#999"
+        placeholder={placeholder}
+        onChangeText={onChangeText}
+        secureTextEntry={isPassword && !isVisible}
+        onBlur={() => setIsFocused(false)}
+        onFocus={() => setIsFocused(true)}
+        keyboardType={isVisible ? 'visible-password' : 'default'}
+        style={[
+          styles.input,
+          isFocused && styles.inputFocused,
+          error && styles.inputError,
+        ]}
+      />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+    </View>
   );
 }
 
@@ -74,6 +81,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
+    color: '#000',
+    backgroundColor: '#fff',
   },
   inputFocused: {
     borderColor: 'orange',
