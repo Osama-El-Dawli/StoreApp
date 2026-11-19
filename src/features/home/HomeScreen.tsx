@@ -10,6 +10,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Product } from './types/productType';
 import ProductModal from './components/ProductModal';
+import { decrement, increment } from './redux/quantitySlice';
 
 export default function HomeScreen() {
   const isOffline = useIsOffline();
@@ -18,10 +19,18 @@ export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const handleQuantityChange = useCallback((id: string, quantity: number) => {
-    setQuantities(prev => ({ ...prev, [id]: quantity }));
-  }, []);
+  const handleQuantityIncrement = useCallback(
+    (id: string, stock: number) => {
+      dispatch(increment({ id, stock }));
+    },
+    [dispatch],
+  );
+  const handleQuantityDecrement = useCallback(
+    (id: string) => {
+      dispatch(decrement(id));
+    },
+    [dispatch],
+  );
 
   const handelProductPress = useCallback((product: Product) => {
     setSelectedProduct(product);
@@ -104,18 +113,16 @@ export default function HomeScreen() {
           </Text>
         ) : null}
         <ProductList
-          onQuantityChange={handleQuantityChange}
-          quantities={quantities}
+          onQuantityIncrement={handleQuantityIncrement}
+          onQuantityDecrement={handleQuantityDecrement}
           onProductPress={handelProductPress}
           isLoading={productLoading}
           products={products}
           ListHeaderComponent={categoriesList}
         />
         <ProductModal
-          onQuantityChange={handleQuantityChange}
-          quantity={
-            selectedProduct ? quantities[String(selectedProduct.id)] ?? 0 : 0
-          }
+          onQuantityIncrement={handleQuantityIncrement}
+          onQuantityDecrement={handleQuantityDecrement}
           product={selectedProduct}
           onClose={handleCloseModal}
         />

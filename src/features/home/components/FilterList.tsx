@@ -33,8 +33,8 @@ export default function FilterList({
         )
           .springify()
           .damping(50)
+          .duration(600)
           .withInitialValues({
-            opacity: 0,
             transform: [{ translateX: 60 }],
           })}
       >

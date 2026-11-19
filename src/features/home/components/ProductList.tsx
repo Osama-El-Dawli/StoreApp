@@ -8,8 +8,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 type Props = {
   products: Product[];
   isLoading: boolean;
-  quantities: Record<string, number>;
-  onQuantityChange: (productId: string, quantity: number) => void;
+  onQuantityIncrement: (productId: string, quantity: number) => void;
+  onQuantityDecrement: (productId: string) => void;
   onProductPress: (product: Product) => void;
   ListHeaderComponent?: React.ReactElement;
 };
@@ -17,8 +17,8 @@ type Props = {
 export default function ProductList({
   products,
   isLoading,
-  quantities,
-  onQuantityChange,
+  onQuantityIncrement,
+  onQuantityDecrement,
   onProductPress,
   ListHeaderComponent,
 }: Props) {
@@ -30,21 +30,27 @@ export default function ProductList({
           style={{ flex: 1 }}
           entering={FadeInDown.delay(row * 300)
             .springify()
+            .duration(600)
             .damping(20)
             .withInitialValues({ transform: [{ translateY: 100 }] })}
         >
           <AutoSkeletonView isLoading={isLoading}>
             <ProductItem
               product={item}
-              quantity={quantities[String(item.id)] ?? 0}
-              onQuantityChange={onQuantityChange}
-              onPress={() => onProductPress(item)}
+              onQuantityIncrement={onQuantityIncrement}
+              onQuantityDecrement={onQuantityDecrement}
+              onPress={onProductPress}
             />
           </AutoSkeletonView>
         </Animated.View>
       );
     },
-    [isLoading, quantities, onQuantityChange, onProductPress],
+    [
+      isLoading,
+      onQuantityIncrement,
+      onQuantityDecrement,
+      onProductPress,
+    ],
   );
 
   return (
@@ -56,7 +62,6 @@ export default function ProductList({
         ListHeaderComponent={ListHeaderComponent}
         showsVerticalScrollIndicator={false}
         data={products}
-        extraData={quantities}
         renderItem={renderItem}
       />
     </View>

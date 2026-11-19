@@ -3,12 +3,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/redux/authSlice';
 import productReducer from '../features/home/redux/productSlice';
 import categoryReducer from '../features/home/redux/categorySlice';
+import quantityReducer from '../features/home/redux/quantitySlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     products: productReducer,
     categories: categoryReducer,
+    quantity: quantityReducer,
   },
 });
 

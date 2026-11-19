@@ -10,12 +10,20 @@ import Quantity from './Quantity';
 
 type Props = {
   product: Product;
-  quantity: number;
-  onQuantityChange: (productId: string, quantity: number) => void;
-  onPress: () => void;
+  onQuantityIncrement: (productId: string, quantity: number) => void;
+  onQuantityDecrement: (productId: string) => void;
+  onPress: (product: Product) => void;
 };
 
-function ProductItem({ product, quantity, onQuantityChange, onPress }: Props) {
+function ProductItem({
+  product,
+  onQuantityIncrement,
+  onQuantityDecrement,
+  onPress,
+}: Props) {
+  const quantity = useAppSelector(
+    state => state.quantity.quantities[String(product.id)]  ?? 0,
+  );
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
   const isAdmin = user?.email === AdminEmail;
@@ -46,7 +54,7 @@ function ProductItem({ product, quantity, onQuantityChange, onPress }: Props) {
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => onPress(product)}
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
     >
       <View style={styles.imageWrapper}>
@@ -94,7 +102,10 @@ function ProductItem({ product, quantity, onQuantityChange, onPress }: Props) {
           style={styles.stepper}
           quantity={quantity}
           stock={stock}
-          onChange={q => onQuantityChange(String(product.id), q)}
+          onDecrement={() => onQuantityDecrement(String(product.id))}
+          onIncrement={() =>
+            onQuantityIncrement(String(product.id), product.stock)
+          }
         />
       </View>
     </Pressable>

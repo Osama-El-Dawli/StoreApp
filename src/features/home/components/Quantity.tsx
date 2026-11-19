@@ -13,25 +13,30 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 type Props = {
   quantity: number;
   stock: number;
-  onChange: (quantity: number) => void;
+  onIncrement: () => void;
+  onDecrement: () => void;
   style?: StyleProp<ViewStyle>;
 };
 
-export default function Quantity({ quantity, stock, onChange, style }: Props) {
+export default function Quantity({
+  quantity,
+  stock,
+  onDecrement,
+  onIncrement,
+  style,
+}: Props) {
   const minDisabled = quantity <= 0;
   const maxDisabled = stock <= 0 || quantity >= stock;
 
   const increase = () => {
     if (quantity < stock) {
-      onChange(quantity + 1);
+      onIncrement();
     } else {
       Toast.show('Reached the available stock', Toast.SHORT);
     }
   };
 
-  const decrease = () => {
-    onChange(Math.max(0, quantity - 1));
-  };
+  const decrease = () => onDecrement();
 
   return (
     <View style={[styles.stepper, style]}>

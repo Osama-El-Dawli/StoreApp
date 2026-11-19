@@ -11,15 +11,24 @@ import React from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { Product } from '../types/productType';
 import Quantity from './Quantity';
+import { useAppSelector } from '../../../store/hooks';
 
 type Props = {
   product: Product | null;
-  quantity: number;
-  onQuantityChange: (productId: string, quantity: number) => void;
+  onQuantityIncrement: (productId: string, Stock: number) => void;
+  onQuantityDecrement: (productId: string) => void;
   onClose: () => void;
 };
 
-function ProductModal({ product, quantity, onQuantityChange, onClose }: Props) {
+function ProductModal({
+  product,
+  onQuantityIncrement,
+  onQuantityDecrement,
+  onClose,
+}: Props) {
+  const quantity = useAppSelector(state =>
+    product ? state.quantity.quantities[String(product.id)] ?? 0 : 0,
+  );
   return (
     <Modal visible={product != null} transparent onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
@@ -47,7 +56,10 @@ function ProductModal({ product, quantity, onQuantityChange, onClose }: Props) {
                 style={styles.stepper}
                 quantity={quantity}
                 stock={product.stock ?? 0}
-                onChange={q => onQuantityChange(String(product.id), q)}
+                onDecrement={() => onQuantityDecrement(String(product.id))}
+                onIncrement={() =>
+                  onQuantityIncrement(String(product.id), product.stock ?? 0)
+                }
               />
             </ScrollView>
           ) : null}
