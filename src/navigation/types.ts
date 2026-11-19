@@ -4,6 +4,7 @@ export type RootStackParamList = {
   splash: undefined;
   login: undefined;
   home: NavigatorScreenParams<MainTabParams> | undefined;
+  cart: undefined;
 };
 
 export type MainTabParams = {

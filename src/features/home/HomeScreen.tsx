@@ -11,8 +11,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Product } from './types/productType';
 import ProductModal from './components/ProductModal';
 import { decrement, increment } from './redux/quantitySlice';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/types';
+import { useNavigation } from '@react-navigation/native';
+
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function HomeScreen() {
+  const navigation = useNavigation<Nav>();
   const isOffline = useIsOffline();
   const dispatch = useAppDispatch();
 
@@ -88,7 +94,13 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomHeader title="Products" />
+      <CustomHeader
+        title="Products"
+        showCart={true}
+        onCartPress={() => {
+          navigation.navigate('cart');
+        }}
+      />
       {isOffline ? (
         <View
           style={{
