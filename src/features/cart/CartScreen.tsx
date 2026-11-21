@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAppSelector } from '../../store/hooks';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import CartListItem from './components/CartListItem';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -33,7 +34,18 @@ export default function CartScreen() {
         contentContainerStyle={cartStyles.list}
         data={items}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <CartListItem item={item} />}
+        renderItem={({ item, index }) => (
+          <Animated.View
+            style={{ flex: 1 }}
+            entering={FadeInDown.delay(200 * index)
+              .springify()
+              .duration(600)
+              .damping(50)
+              .withInitialValues({ translateY: 100 })}
+          >
+            <CartListItem item={item} />
+          </Animated.View>
+        )}
         ListEmptyComponent={
           <View style={cartStyles.empty}>
             <Ionicons name="cart-outline" size={64} color={'#ccc'} />
