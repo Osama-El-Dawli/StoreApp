@@ -20,4 +20,5 @@ export interface ProductState {
   products: Product[];
   isLoading: boolean;
   error: string | null;
+  removingIds: string[];
 }

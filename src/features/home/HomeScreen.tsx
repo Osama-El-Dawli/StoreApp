@@ -10,10 +10,10 @@ import CustomHeader from '../../components/CustomHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Product } from './types/productType';
 import ProductModal from './components/ProductModal';
-import { decrement, increment } from './redux/quantitySlice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import { decrement, increment } from '../cart/redux/cartSlice';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -26,14 +26,14 @@ export default function HomeScreen() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleQuantityIncrement = useCallback(
-    (id: string, stock: number) => {
-      dispatch(increment({ id, stock }));
+    (product: Product, color: string) => {
+      dispatch(increment({ product, color }));
     },
     [dispatch],
   );
   const handleQuantityDecrement = useCallback(
-    (id: string) => {
-      dispatch(decrement(id));
+    (productId: string, color: string) => {
+      dispatch(decrement({ productId, color }));
     },
     [dispatch],
   );

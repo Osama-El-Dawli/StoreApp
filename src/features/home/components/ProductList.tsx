@@ -8,8 +8,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 type Props = {
   products: Product[];
   isLoading: boolean;
-  onQuantityIncrement: (productId: string, quantity: number) => void;
-  onQuantityDecrement: (productId: string) => void;
+  onQuantityIncrement: (product: Product, color: string) => void;
+  onQuantityDecrement: (productId: string, color:string) => void;
   onProductPress: (product: Product) => void;
   ListHeaderComponent?: React.ReactElement;
 };

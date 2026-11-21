@@ -43,7 +43,6 @@ export default function Quantity({
       <Pressable
         onPress={decrease}
         disabled={minDisabled}
-        hitSlop={6}
         style={[styles.stepBtn, minDisabled && styles.stepBtnDisabled]}
       >
         <Ionicons name="remove" size={18} color="#fff" />
@@ -54,7 +53,6 @@ export default function Quantity({
       <Pressable
         onPress={increase}
         disabled={maxDisabled}
-        hitSlop={6}
         style={[styles.stepBtn, maxDisabled && styles.stepBtnDisabled]}
       >
         <Ionicons name="add" size={18} color="#fff" />

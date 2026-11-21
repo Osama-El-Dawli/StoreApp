@@ -7,16 +7,17 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { Product } from '../types/productType';
 import Quantity from './Quantity';
 import { useAppSelector } from '../../../store/hooks';
+import ProductColors, { PRODUCT_COLORS } from './ProductColors';
 
 type Props = {
   product: Product | null;
-  onQuantityIncrement: (productId: string, Stock: number) => void;
-  onQuantityDecrement: (productId: string) => void;
+  onQuantityIncrement: (product: Product, color: string) => void;
+  onQuantityDecrement: (productId: string, color: string) => void;
   onClose: () => void;
 };
 
@@ -26,8 +27,9 @@ function ProductModal({
   onQuantityDecrement,
   onClose,
 }: Props) {
+  const [color, setColor] = useState(PRODUCT_COLORS[0]);
   const quantity = useAppSelector(state =>
-    product ? state.quantity.quantities[String(product.id)] ?? 0 : 0,
+    product ? state.cart.items[`${product.id}-${color}`]?.quantity ?? 0 : 0,
   );
   return (
     <Modal visible={product != null} transparent onRequestClose={onClose}>
@@ -52,14 +54,16 @@ function ProductModal({
               <Text style={styles.description}>{product.description}</Text>
               <Text style={styles.stock}>{product.stock} in Stock</Text>
 
+              <ProductColors onSelect={setColor} selectedColor={color} />
+
               <Quantity
                 style={styles.stepper}
                 quantity={quantity}
                 stock={product.stock ?? 0}
-                onDecrement={() => onQuantityDecrement(String(product.id))}
-                onIncrement={() =>
-                  onQuantityIncrement(String(product.id), product.stock ?? 0)
+                onDecrement={() =>
+                  onQuantityDecrement(String(product.id), color)
                 }
+                onIncrement={() => onQuantityIncrement(product, color)}
               />
             </ScrollView>
           ) : null}

@@ -1,5 +1,13 @@
-import { View, Text, Image, StyleSheet, Alert, Pressable } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Alert,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
+import React, { useState } from 'react';
 import Toast from 'react-native-simple-toast';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { Product } from '../types/productType';
@@ -7,11 +15,12 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { AdminEmail } from '../../../api/apiConst';
 import { removeProduct } from '../redux/productThunks';
 import Quantity from './Quantity';
+import ProductColors, { PRODUCT_COLORS } from './ProductColors';
 
 type Props = {
   product: Product;
-  onQuantityIncrement: (productId: string, quantity: number) => void;
-  onQuantityDecrement: (productId: string) => void;
+  onQuantityIncrement: (product: Product, color: string) => void;
+  onQuantityDecrement: (productId: string, color: string) => void;
   onPress: (product: Product) => void;
 };
 
@@ -21,10 +30,14 @@ function ProductItem({
   onQuantityDecrement,
   onPress,
 }: Props) {
+  const [color, setColor] = useState(PRODUCT_COLORS[0]);
   const quantity = useAppSelector(
-    state => state.quantity.quantities[String(product.id)]  ?? 0,
+    state => state.cart.items[`${product.id}-${color}`]?.quantity ?? 0,
   );
   const dispatch = useAppDispatch();
+  const isRemoving = useAppSelector(state =>
+    state.products.removingIds.includes(String(product.id)),
+  );
   const { user } = useAppSelector(state => state.auth);
   const isAdmin = user?.email === AdminEmail;
 
@@ -54,8 +67,13 @@ function ProductItem({
 
   return (
     <Pressable
+      disabled={isRemoving}
       onPress={() => onPress(product)}
-      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      style={({ pressed }) => [
+        styles.card,
+        pressed && styles.cardPressed,
+        isRemoving && { opacity: 0.5 },
+      ]}
     >
       <View style={styles.imageWrapper}>
         <Image
@@ -75,7 +93,11 @@ function ProductItem({
             hitSlop={8}
             style={styles.deleteBtn}
           >
-            <Ionicons name="trash-outline" size={16} color="#fff" />
+            {isRemoving ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Ionicons name="trash-outline" size={16} color="#fff" />
+            )}
           </Pressable>
         ) : null}
       </View>
@@ -98,14 +120,13 @@ function ProductItem({
           </Text>
         </View>
 
+        <ProductColors onSelect={setColor} selectedColor={color} />
         <Quantity
           style={styles.stepper}
           quantity={quantity}
           stock={stock}
-          onDecrement={() => onQuantityDecrement(String(product.id))}
-          onIncrement={() =>
-            onQuantityIncrement(String(product.id), product.stock)
-          }
+          onDecrement={() => onQuantityDecrement(String(product.id), color)}
+          onIncrement={() => onQuantityIncrement(product, color)}
         />
       </View>
     </Pressable>

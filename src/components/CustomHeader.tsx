@@ -19,11 +19,10 @@ export default function CustomHeader({
   onCartPress,
   onBack,
 }: Props) {
-  
-  const hasQuantities = useAppSelector(state =>
-    Object.values(state.quantity.quantities).some(q => q > 0),
+  const Quantities = useAppSelector(
+    state => Object.values(state.cart.items).length,
   );
-  
+
   return (
     <View style={styles.container}>
       {showBack ? (
@@ -41,7 +40,11 @@ export default function CustomHeader({
           <Pressable onPress={onCartPress} style={styles.btn}>
             <Ionicons name="cart" size={24} color="#fff" />
           </Pressable>
-          {hasQuantities ? <View style={styles.redPoint} /> : null}
+          {Quantities > 0 ? (
+            <View style={styles.redPoint}>
+              <Text style={styles.redPointText}>{Quantities}</Text>
+            </View>
+          ) : null}
         </View>
       ) : null}
     </View>
@@ -94,11 +97,17 @@ const styles = StyleSheet.create({
   },
   redPoint: {
     position: 'absolute',
-    top: 0,
-    left: 10,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    top: -4,
+    left: 4,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
     backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  redPointText: {
+    color: '#fff',
+    fontSize: 10,
   },
 });
